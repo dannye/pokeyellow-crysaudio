@@ -41,7 +41,7 @@ VermilionDock_1db9b:
 	ld a, $ff
 	ld [wJoyIgnore], a
 	call StopAllMusic
-	ld c, BANK(Music_Surfing)
+	ld c, 0 ; BANK(Music_Surfing)
 	ld a, MUSIC_SURFING
 	call PlayMusic
 	farcall LoadSmokeTileFourTimes

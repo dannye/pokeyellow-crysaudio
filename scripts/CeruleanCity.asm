@@ -70,7 +70,7 @@ ENDC
 	jr z, .asm_19512
 	call StopAllMusic
 .asm_19512
-	ld c, BANK(Music_MeetRival)
+	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
 	call PlayMusic
 	xor a

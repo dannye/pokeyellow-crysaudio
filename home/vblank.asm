@@ -57,14 +57,15 @@ VBlank::
 	ldh [hFrameCounter], a
 
 .skipDec
-	call FadeOutAudio
+	call UpdateSound
+;	call FadeOutAudio
 
-	ld a, BANK(Music_DoLowHealthAlarm)
-	call BankswitchCommon
-	call Music_DoLowHealthAlarm
-	ld a, BANK(Audio1_UpdateMusic)
-	call BankswitchCommon
-	call Audio1_UpdateMusic
+;	ld a, BANK(Music_DoLowHealthAlarm)
+;	call BankswitchCommon
+;	call Music_DoLowHealthAlarm
+;	ld a, BANK(Audio1_UpdateMusic)
+;	call BankswitchCommon
+;	call Audio1_UpdateMusic
 
 	call SerialFunction
 

@@ -39,7 +39,7 @@ PalletTownScript0:
 	ld a, PLAYER_DIR_UP
 	ld [wPlayerMovingDirection], a
 	call StopAllMusic
-	ld a, BANK(Music_MeetProfOak)
+	ld a, 0 ; BANK(Music_MeetProfOak)
 	ld c, a
 	ld a, MUSIC_MEET_PROF_OAK ; "oak appears" music
 	call PlayMusic

@@ -167,8 +167,8 @@ PewterMuseumGuyMovementScriptPointerTable::
 	dw PewterMovementScript_Done
 
 PewterMovementScript_WalkToMuseum:
-	ld a, BANK(Music_MuseumGuy)
-	ld c, a
+;	ld a, 0 ; BANK(Music_MuseumGuy)
+;	ld c, a
 	ld a, MUSIC_MUSEUM_GUY
 	call PlayMusic
 	ld a, [wSpriteIndex]
@@ -221,8 +221,8 @@ PewterGymGuyMovementScriptPointerTable::
 	dw PewterMovementScript_Done
 
 PewterMovementScript_WalkToGym:
-	ld a, BANK(Music_MuseumGuy)
-	ld c, a
+;	ld a, 0 ; BANK(Music_MuseumGuy)
+;	ld c, a
 	ld a, MUSIC_MUSEUM_GUY
 	call PlayMusic
 	ld a, [wSpriteIndex]

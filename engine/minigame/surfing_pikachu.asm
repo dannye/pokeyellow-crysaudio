@@ -103,12 +103,13 @@ Func_f80b7:
 	ret
 
 SurfingMinigame_UpdateMusicTempo:
+	ret ; TODO
 	ld a, [wc634]
 	and a
 	ret z
 
 	; check that all channels are on their last frame of note delay
-	ld hl, wChannelNoteDelayCounters
+;	ld hl, wChannelNoteDelayCounters
 	ld a, $1
 	cp [hl]
 	ret nz
@@ -133,9 +134,9 @@ SurfingMinigame_UpdateMusicTempo:
 	add hl, de
 	add hl, de
 	ld a, [hli]
-	ld [wMusicTempo + 1], a
+;	ld [wMusicTempo + 1], a
 	ld a, [hl]
-	ld [wMusicTempo], a
+;	ld [wMusicTempo], a
 	ret
 
 .Tempos:
@@ -146,7 +147,8 @@ SurfingMinigame_UpdateMusicTempo:
 	dw  85
 
 SurfingMinigame_ResetMusicTempo:
-	ld hl, wChannelNoteDelayCounters
+	ret ; TODO
+;	ld hl, wChannelNoteDelayCounters
 	ld a, $1
 	cp [hl]
 	ret nz
@@ -157,9 +159,9 @@ SurfingMinigame_ResetMusicTempo:
 	cp [hl]
 	ret nz
 	ld a, 117
-	ld [wMusicTempo + 1], a
+;	ld [wMusicTempo + 1], a
 	xor a
-	ld [wMusicTempo], a
+;	ld [wMusicTempo], a
 	ret
 
 SurfingPikachuMinigame_LoadGFXAndLayout:
@@ -714,8 +716,8 @@ Func_f848d:
 	ld [hl], a
 	ld [wSurfingMinigameRadnessMeter], a
 	ld [wSurfingMinigameTrickFlags], a
-	xor a
-	ld [wChannelSoundIDs + Ch8], a
+;	xor a
+;	ld [wChannelSoundIDs + Ch8], a
 	ld a, SFX_SURFING_JUMP
 	call PlaySound
 	ret
@@ -750,8 +752,8 @@ SurfingMinigame_ScoreCurrentWave:
 	ld [wc5e1], a
 	ld a, $10
 	call SetCurrentAnimatedObjectCallbackAndResetFrameStateRegisters
-	xor a
-	ld [wChannelSoundIDs + Ch8], a
+;	xor a
+;	ld [wChannelSoundIDs + Ch8], a
 	ld a, SFX_SURFING_CRASH
 	call PlaySound
 	ret
@@ -1009,8 +1011,8 @@ SurfingMinigame_TileInteraction:
 .action_2
 	call SufingMinigame_ReduceSpeedBy64
 .action_3
-	xor a
-	ld [wChannelSoundIDs + Ch8], a
+;	xor a
+;	ld [wChannelSoundIDs + Ch8], a
 	ld a, SFX_SURFING_LAND
 	call PlaySound
 	and a
@@ -1716,7 +1718,7 @@ DidPlayerGetAHighScore:
 	call WaitForSoundToFinish
 	ldpikacry e, PikachuCry34
 	call SurfingMinigame_PlayPikaCryIfSurfingPikaInParty
-	ld a, SFX_GET_ITEM2_4_2
+	ld a, SFX_GET_ITEM_2
 	call PlaySound
 	scf
 	ret
@@ -2380,7 +2382,7 @@ SurfingPikachuMinigameIntro:
 	call UpdateGBCPal_OBP1
 	call DelayFrame
 	ld a, MUSIC_SURFING_PIKACHU
-	ld c, BANK(Music_SurfingPikachu)
+	ld c, 0 ; BANK(Music_SurfingPikachu)
 	call PlayMusic
 	xor a
 	ld [wSurfingMinigameIntroAnimationFinished], a

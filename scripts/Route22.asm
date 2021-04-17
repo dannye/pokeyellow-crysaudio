@@ -91,7 +91,7 @@ Route22Script0:
 	jr z, .asm_50f4e
 	call StopAllMusic
 .asm_50f4e
-	ld c, BANK(Music_MeetRival)
+	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
 	call PlayMusic
 	ld a, $1

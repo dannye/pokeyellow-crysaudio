@@ -131,7 +131,7 @@ SilphCo7Script0:
 	ld a, PLAYER_DIR_DOWN
 	ld [wPlayerMovingDirection], a
 	call StopAllMusic
-	ld c, BANK(Music_MeetRival)
+	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
 	call PlayMusic
 	ld a, $9

@@ -312,7 +312,7 @@ OaksLabScript12:
 	xor a ; SPRITE_FACING_DOWN
 	ldh [hSpriteFacingDirection], a
 	call SetSpriteFacingDirectionAndDelay
-	ld c, BANK(Music_MeetRival)
+	ld c, 0 ; BANK(Music_MeetRival)
 	ld a, MUSIC_MEET_RIVAL
 	call PlayMusic
 	ld a, $b

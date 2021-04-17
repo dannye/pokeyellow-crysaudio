@@ -233,7 +233,7 @@ SilphCo11Script_6229c:
 	SetEventReuseHL EVENT_781
 .asm_622c3
 	call StopAllMusic
-	ld c, BANK(Music_MeetJessieJames)
+	ld c, 0 ; BANK(Music_MeetJessieJames)
 	ld a, MUSIC_MEET_JESSIE_JAMES
 	call PlayMusic
 	xor a
@@ -420,7 +420,7 @@ SilphCo11Script12:
 	xor a
 	ld [wDoNotWaitForButtonPressAfterDisplayingText], a
 	call StopAllMusic
-	ld c, BANK(Music_MeetJessieJames)
+	ld c, 0 ; BANK(Music_MeetJessieJames)
 	ld a, MUSIC_MEET_JESSIE_JAMES
 	call PlayMusic
 	ld a, $ff

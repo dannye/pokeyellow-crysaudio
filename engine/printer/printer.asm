@@ -489,12 +489,12 @@ Printer_ResetJoypadHRAM:
 
 Printer_PlayPrinterMusic:
 	call Printer_FadeOutMusicAndWait
-	ld a, [wAudioROMBank]
-	ld [wAudioSavedROMBank], a
-	ld a, BANK(Music_GBPrinter)
-	ld [wAudioROMBank], a
+;	ld a, [wAudioROMBank]
+;	ld [wAudioSavedROMBank], a
+;	ld a, 0 ; BANK(Music_GBPrinter)
+;	ld [wAudioROMBank], a
 	ld a, MUSIC_GB_PRINTER
-	ld [wNewSoundID], a
+;	ld [wNewSoundID], a
 	call PlaySound
 	ret
 
@@ -505,10 +505,11 @@ Printer_PlayMapMusic:
 
 Printer_FadeOutMusicAndWait:
 	ld a, $4
-	ld [wAudioFadeOutControl], a
-	call StopAllMusic
+	ld [wMusicFade], a
+	xor a
+	ld [wMusicFadeID], a
 .wait_music_stop
-	ld a, [wAudioFadeOutControl]
+	ld a, [wMusicFade]
 	and a
 	jr nz, .wait_music_stop
 	ret

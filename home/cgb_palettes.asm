@@ -73,13 +73,16 @@ UpdateGBCPal_OBP1::
 Func_3082::
 	ldh a, [hLoadedROMBank]
 	push af
-	call FadeOutAudio
-	ld a, BANK(Music_DoLowHealthAlarm)
-	call BankswitchCommon
-	call Music_DoLowHealthAlarm
-	ld a, BANK(Audio1_UpdateMusic)
-	call BankswitchCommon
-	call Audio1_UpdateMusic
+
+	call UpdateSound
+;	call FadeOutAudio
+;	ld a, BANK(Music_DoLowHealthAlarm)
+;	call BankswitchCommon
+;	call Music_DoLowHealthAlarm
+;	ld a, BANK(Audio1_UpdateMusic)
+;	call BankswitchCommon
+;	call Audio1_UpdateMusic
+
 	pop af
 	call BankswitchCommon
 	ret

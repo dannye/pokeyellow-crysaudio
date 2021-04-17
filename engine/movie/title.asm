@@ -12,9 +12,9 @@ SetDefaultNamesBeforeTitlescreen::
 	ld [hli], a
 	ld [hli], a
 	ld [hl], a
-	ld a, BANK(Music_TitleScreen)
-	ld [wAudioROMBank], a
-	ld [wAudioSavedROMBank], a
+;	ld a, 0 ; BANK(Music_TitleScreen)
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
 
 DisplayTitleScreen:
 	call GBPalWhiteOut
@@ -132,8 +132,8 @@ DisplayTitleScreen:
 	call LoadScreenTilesFromBuffer1
 	ld c, 36
 	call DelayFrames
-	ld a, SFX_INTRO_WHOOSH
-	call PlaySound
+;	ld a, SFX_INTRO_WHOOSH
+;	call PlaySound
 
 ; scroll game version in from the right
 	callfar TitleScreen_PlacePikaSpeechBubble
@@ -145,8 +145,8 @@ DisplayTitleScreen:
 	call WaitForSoundToFinish
 	call StopAllMusic
 	ld a, MUSIC_TITLE_SCREEN
-	ld [wNewSoundID], a
-	call PlaySound
+;	ld [wNewSoundID], a
+	call PlayMusic
 .loop
 	xor a
 	ld [wUnusedCC5B], a
@@ -226,10 +226,11 @@ ENDC
 	jp .titleScreenLoop
 
 .doTitlescreenReset
-	ld [wAudioFadeOutControl], a
-	call StopAllMusic
+	ld [wMusicFade], a
+	xor a
+	ld [wMusicFadeID], a
 .audioFadeLoop
-	ld a, [wAudioFadeOutControl]
+	ld a, [wMusicFade]
 	and a
 	jr nz, .audioFadeLoop
 	jp Init

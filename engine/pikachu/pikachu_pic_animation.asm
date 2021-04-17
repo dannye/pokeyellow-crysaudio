@@ -789,22 +789,25 @@ PikaPicAnimCommand_cry:
 
 PikaPicAnimCommand_thunderbolt:
 	ld a, $1
-	ld [wMuteAudioAndPauseMusic], a
+;	ld [wMuteAudioAndPauseMusic], a
 	call DelayFrame
-	ld a, [wAudioROMBank]
-	push af
-	ld a, BANK(SFX_Battle_2F)
-	ld [wAudioROMBank], a
-	ld [wAudioSavedROMBank], a
+;	ld a, [wAudioROMBank]
+;	push af
+;	ld a, 0 ; BANK(SFX_Battle_2F)
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
 	call .LoadAudio
-	call PlaySound
+	call PlayBattleSound
+	ld a, 1
+	ld [wSFXPriority], a
 	call .FlashScreen
 	call WaitForSoundToFinish
-	pop af
-	ld [wAudioROMBank], a
-	ld [wAudioSavedROMBank], a
+;	pop af
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
 	xor a
-	ld [wMuteAudioAndPauseMusic], a
+	ld [wSFXPriority], a
+;	ld [wMuteAudioAndPauseMusic], a
 	ret
 
 .LoadAudio:
@@ -818,14 +821,20 @@ PikaPicAnimCommand_thunderbolt:
 	call GetFarByte
 	ld b, a
 	inc hl
+	push bc
 	ld a, BANK(MoveSoundTable)
 	call GetFarByte
 	inc hl
-	ld [wFrequencyModifier], a
+	ld c, a
+	ld b, 0
 	ld a, BANK(MoveSoundTable)
 	call GetFarByte
-	ld [wTempoModifier], a
-	ld a, b
+	add $80
+	ld e, a
+	ld a, 0
+	adc 0
+	ld d, a
+	pop af
 	ret
 
 .FlashScreen:

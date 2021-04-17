@@ -42,7 +42,7 @@ SetDefaultNames:
 
 OakSpeech:
 	call StopAllMusic ; stop music
-	ld a, BANK(Music_Routes2)
+	ld a, 0 ; BANK(Music_Routes2)
 	ld c, a
 	ld a, MUSIC_ROUTES2
 	call PlayMusic
@@ -136,12 +136,15 @@ OakSpeech:
 	call ResetPlayerSpriteData
 	ldh a, [hLoadedROMBank]
 	push af
-	ld a, BANK(Music_PalletTown)
-	ld [wAudioROMBank], a
-	ld [wAudioSavedROMBank], a
+;	ld a, 0 ; BANK(Music_PalletTown)
+;	ld [wAudioROMBank], a
+;	ld [wAudioSavedROMBank], a
+
 	ld a, 10
-	ld [wAudioFadeOutControl], a
-	call StopAllMusic
+	ld [wMusicFade], a
+	xor a
+	ld [wMusicFadeID], a
+
 	pop af
 	call BankswitchCommon
 	ld c, 20
