@@ -381,14 +381,14 @@ MACRO dec_octave
 	db $f5
 ENDM
 
-MACRO notetype0
+MACRO speed
 	db $f6, \1
 ENDM
 
-MACRO notetype1
+MACRO channel_volume
 	db $f7, \1
 ENDM
 
-MACRO notetype2
+MACRO fade_wave
 	db $f8, \1
 ENDM
