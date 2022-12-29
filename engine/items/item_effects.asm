@@ -122,7 +122,7 @@ ItemUseBall:
 	ld a, [wPartyCount] ; is party full?
 	cp PARTY_LENGTH
 	jr nz, .canUseBall
-	ld a, [wNumInBox] ; is box full?
+	ld a, [wBoxCount] ; is box full?
 	cp MONS_PER_BOX
 	jp z, BoxFullCannotThrowBall
 
@@ -237,7 +237,7 @@ ItemUseBall:
 	ld a, [wEnemyMonStatus]
 	and a
 	jr z, .skipAilmentValueSubtraction ; no ailments
-	and 1 << FRZ | SLP
+	and (1 << FRZ) | SLP_MASK
 	ld c, 12
 	jr z, .notFrozenOrAsleep
 	ld c, 25
@@ -394,7 +394,7 @@ ItemUseBall:
 	ld a, [wEnemyMonStatus]
 	and a
 	jr z, .skip5
-	and 1 << FRZ | SLP
+	and (1 << FRZ) | SLP_MASK
 	ld b, 5
 	jr z, .addAilmentValue
 	ld b, 10
@@ -934,14 +934,14 @@ ItemUseMedicine:
 	ld [wd0b5], a
 	pop af
 	push af
-	cp $28
-	jr nc, .asm_d906
+	cp CALCIUM + 1
+	jr nc, .noHappinessBoost
 	push hl
 	push de
 	callabd_ModifyPikachuHappiness PIKAHAPPY_USEDITEM
 	pop de
 	pop hl
-.asm_d906
+.noHappinessBoost
 	pop af
 	ld [wcf91], a
 	pop af
@@ -977,7 +977,7 @@ ItemUseMedicine:
 	lb bc, ICE_HEAL_MSG, 1 << FRZ
 	cp ICE_HEAL
 	jr z, .checkMonStatus
-	lb bc, AWAKENING_MSG, SLP
+	lb bc, AWAKENING_MSG, SLP_MASK
 	cp AWAKENING
 	jr z, .checkMonStatus
 	lb bc, PARALYZ_HEAL_MSG, 1 << PAR
@@ -1108,7 +1108,7 @@ ItemUseMedicine:
 .notFullHP ; if the pokemon's current HP doesn't equal its max HP
 	xor a
 	ld [wLowHealthAlarm], a ;disable low health alarm
-;	ld [wChannelSoundIDs + Ch5], a
+;	ld [wChannelSoundIDs + CHAN5], a
 	push hl
 	push de
 	ld bc, wPartyMon1MaxHP - (wPartyMon1HP + 1)
@@ -1295,7 +1295,7 @@ ItemUseMedicine:
 	xor a
 	ld [wBattleMonStatus], a ; remove the status ailment in the in-battle pokemon data
 .calculateHPBarCoords
-	ld hl, wOAMBuffer + $90
+	ld hl, wShadowOAMSprite36
 	ld bc, 2 * SCREEN_WIDTH
 	inc d
 .calculateHPBarCoordsLoop
@@ -1433,9 +1433,9 @@ ItemUseMedicine:
 	jr .statNameLoop
 
 .gotStatName
-	ld de, wcf4b
+	ld de, wStringBuffer
 	ld bc, 10
-	call CopyData ; copy the stat's name to wcf4b
+	call CopyData ; copy the stat's name to wStringBuffer
 	ld a, SFX_HEAL_AILMENT
 	call PlaySound
 	ld hl, VitaminStatRoseText
@@ -1894,7 +1894,7 @@ ItemUsePokeflute:
 .inBattle
 	xor a
 	ld [wWereAnyMonsAsleep], a
-	ld b, ~SLP & $ff
+	ld b, ~SLP_MASK
 	ld hl, wPartyMon1Status
 	call WakeUpEntireParty
 	ld a, [wIsInBattle]
@@ -1914,7 +1914,7 @@ ItemUsePokeflute:
 	and b ; remove Sleep status
 	ld [hl], a
 	ld a, c
-	and SLP
+	and SLP_MASK
 	jr z, .asm_e063
 	ld a, $1
 	ld [wWereAnyMonsAsleep], a
@@ -1937,7 +1937,7 @@ ItemUsePokeflute:
 	call WaitForSoundToFinish
 ;	farcall Music_PokeFluteInBattle ; play in-battle pokeflute music
 ;.musicWaitLoop ; wait for music to finish playing
-;	ld a, [wChannelSoundIDs + Ch7]
+;	ld a, [wChannelSoundIDs + CHAN7]
 ;	and a ; music off?
 ;	jr nz, .musicWaitLoop
 
@@ -1958,7 +1958,7 @@ WakeUpEntireParty:
 .loop
 	ld a, [hl]
 	push af
-	and SLP ; is pokemon asleep?
+	and SLP_MASK
 	jr z, .notAsleep
 	ld a, 1
 	ld [wWereAnyMonsAsleep], a ; indicate that a pokemon had to be woken up
@@ -2004,7 +2004,7 @@ PlayedFluteHadEffectText:
 	ld c, 0 ; BANK(SFX_Pokeflute)
 	call PlaySound
 ;.musicWaitLoop ; wait for music to finish playing
-;	ld a, [wChannelSoundIDs + Ch3]
+;	ld a, [wChannelSoundIDs + CHAN3]
 ;	cp SFX_POKEFLUTE
 ;	jr z, .musicWaitLoop
 	call PlayDefaultMusic ; start playing normal music again
@@ -2226,7 +2226,7 @@ ItemUsePPRestore:
 	ld a, [hl]
 	ld [wd11e], a
 	call GetMoveName
-	call CopyStringToCF4B ; copy name to wcf4b
+	call CopyToStringBuffer
 	pop hl
 	ld a, [wPPRestoreItem]
 	cp ETHER
@@ -2411,7 +2411,7 @@ ItemUseTMHM:
 	ld a, [wd11e]
 	ld [wMoveNum], a
 	call GetMoveName
-	call CopyStringToCF4B ; copy name to wcf4b
+	call CopyToStringBuffer
 	pop af
 	ld hl, BootedUpTMText
 	jr nc, .printBootedUpMachineText
@@ -2438,7 +2438,7 @@ ItemUseTMHM:
 	ld a, [wcf91]
 	push af
 .chooseMon
-	ld hl, wcf4b
+	ld hl, wStringBuffer
 	ld de, wTempMoveNameBuffer
 	ld bc, 14
 	call CopyData ; save the move name because DisplayPartyMenu will overwrite it
@@ -2449,7 +2449,7 @@ ItemUseTMHM:
 	call DisplayPartyMenu
 	push af
 	ld hl, wTempMoveNameBuffer
-	ld de, wcf4b
+	ld de, wStringBuffer
 	ld bc, 14
 	call CopyData
 	pop af
@@ -2840,7 +2840,7 @@ TossItem_::
 	ld a, [wcf91]
 	ld [wd11e], a
 	call GetItemName
-	call CopyStringToCF4B ; copy name to wcf4b
+	call CopyToStringBuffer
 	ld hl, IsItOKToTossItemText
 	call PrintText
 	hlcoord 14, 7
@@ -2860,7 +2860,7 @@ TossItem_::
 	ld a, [wcf91]
 	ld [wd11e], a
 	call GetItemName
-	call CopyStringToCF4B ; copy name to wcf4b
+	call CopyToStringBuffer
 	ld hl, ThrewAwayItemText
 	call PrintText
 	pop hl
@@ -2902,9 +2902,10 @@ IsKeyItem_::
 	jr nc, .checkIfItemIsHM
 ; if the item is not an HM or TM
 	push af
-	ld hl, KeyItemBitfield
+	ld hl, KeyItemFlags
 	ld de, wBuffer
 	ld bc, 15 ; only 11 bytes are actually used
+	ASSERT 15 >= (NUM_ITEMS + 7) / 8
 	call CopyData
 	pop af
 	dec a
@@ -2926,14 +2927,14 @@ IsKeyItem_::
 INCLUDE "data/items/key_items.asm"
 
 SendNewMonToBox:
-	ld de, wNumInBox
+	ld de, wBoxCount
 	ld a, [de]
 	inc a
 	ld [de], a
 	ld a, [wcf91]
 	ld [wd0b5], a
 	ld c, a
-.asm_e6f5
+.loop
 	inc de
 	ld a, [de]
 	ld b, a
@@ -2941,13 +2942,13 @@ SendNewMonToBox:
 	ld c, b
 	ld [de], a
 	cp $ff
-	jr nz, .asm_e6f5
+	jr nz, .loop
 	call GetMonHeader
 	ld hl, wBoxMonOT
 	ld bc, NAME_LENGTH
-	ld a, [wNumInBox]
+	ld a, [wBoxCount]
 	dec a
-	jr z, .asm_e732
+	jr z, .skip
 	dec a
 	call AddNTimes
 	push hl
@@ -2956,10 +2957,10 @@ SendNewMonToBox:
 	ld d, h
 	ld e, l
 	pop hl
-	ld a, [wNumInBox]
+	ld a, [wBoxCount]
 	dec a
 	ld b, a
-.asm_e71f
+.loop2
 	push bc
 	push hl
 	ld bc, NAME_LENGTH
@@ -2971,15 +2972,15 @@ SendNewMonToBox:
 	add hl, bc
 	pop bc
 	dec b
-	jr nz, .asm_e71f
-.asm_e732
+	jr nz, .loop2
+.skip
 	ld hl, wPlayerName
 	ld de, wBoxMonOT
 	ld bc, NAME_LENGTH
 	call CopyData
-	ld a, [wNumInBox]
+	ld a, [wBoxCount]
 	dec a
-	jr z, .asm_e76e
+	jr z, .skip2
 	ld hl, wBoxMonNicks
 	ld bc, NAME_LENGTH
 	dec a
@@ -2990,10 +2991,10 @@ SendNewMonToBox:
 	ld d, h
 	ld e, l
 	pop hl
-	ld a, [wNumInBox]
+	ld a, [wBoxCount]
 	dec a
 	ld b, a
-.asm_e75b
+.loop3
 	push bc
 	push hl
 	ld bc, NAME_LENGTH
@@ -3005,15 +3006,15 @@ SendNewMonToBox:
 	add hl, bc
 	pop bc
 	dec b
-	jr nz, .asm_e75b
-.asm_e76e
+	jr nz, .loop3
+.skip2
 	ld hl, wBoxMonNicks
 	ld a, NAME_MON_SCREEN
 	ld [wNamingScreenType], a
 	predef AskName
-	ld a, [wNumInBox]
+	ld a, [wBoxCount]
 	dec a
-	jr z, .asm_e7ab
+	jr z, .skip3
 	ld hl, wBoxMons
 	ld bc, wBoxMon2 - wBoxMon1
 	dec a
@@ -3024,10 +3025,10 @@ SendNewMonToBox:
 	ld d, h
 	ld e, l
 	pop hl
-	ld a, [wNumInBox]
+	ld a, [wBoxCount]
 	dec a
 	ld b, a
-.asm_e798
+.loop4
 	push bc
 	push hl
 	ld bc, wBoxMon2 - wBoxMon1
@@ -3039,8 +3040,8 @@ SendNewMonToBox:
 	add hl, bc
 	pop bc
 	dec b
-	jr nz, .asm_e798
-.asm_e7ab
+	jr nz, .loop4
+.skip3
 	ld a, [wEnemyMonLevel]
 	ld [wEnemyMonBoxLevel], a
 	ld hl, wEnemyMon
@@ -3070,11 +3071,11 @@ SendNewMonToBox:
 	inc de
 	xor a
 	ld b, NUM_STATS * 2
-.asm_e7e3
+.loop5
 	ld [de], a
 	inc de
 	dec b
-	jr nz, .asm_e7e3
+	jr nz, .loop5
 	ld hl, wEnemyMonDVs
 	ld a, [hli]
 	ld [de], a
@@ -3083,12 +3084,12 @@ SendNewMonToBox:
 	ld [de], a
 	ld hl, wEnemyMonPP
 	ld b, NUM_MOVES
-.asm_e7f5
+.loop6
 	ld a, [hli]
 	inc de
 	ld [de], a
 	dec b
-	jr nz, .asm_e7f5
+	jr nz, .loop6
 	ld a, [wcf91]
 	cp KADABRA
 	jr nz, .notKadabra
@@ -3122,13 +3123,6 @@ IsNextTileShoreOrWater::
 	ret
 
 INCLUDE "data/tilesets/water_tilesets.asm"
-
-; shore tiles
-ShoreTiles:
-	db $48, $32
-WaterTile:
-	db $14
-	db $ff ; terminator
 
 ; reloads map view and processes sprite data
 ; for items that cause the overworld to be displayed
@@ -3169,7 +3163,7 @@ FindWildLocationsOfMon:
 
 CheckMapForMon:
 	inc hl
-	ld b, $a
+	ld b, NUM_WILDMONS
 .loop
 	ld a, [wd11e]
 	cp [hl]

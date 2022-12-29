@@ -489,8 +489,8 @@ Func_f8324:
 	xor a
 	ldh [hLCDCPointer], a
 	ld [wSurfingMinigameSCX], a
-	ld [wSurfingMinigameSCX + 1], a
-	ld [wSurfingMinigameSCX + 2], a
+	ld [wSurfingMinigameSCX2], a
+	ld [wSurfingMinigameSCXHi], a
 	ret
 
 Func_f835c:
@@ -659,7 +659,7 @@ SurfingMinigame_UpdatePikachuDistance:
 	ret nc
 	ld hl, wc5e5
 	inc [hl]
-	ld hl, wOAMBuffer + 4 * 4 + 1
+	ld hl, wShadowOAMSprite04XCoord
 	dec [hl]
 	dec [hl]
 	ret
@@ -717,7 +717,7 @@ Func_f848d:
 	ld [wSurfingMinigameRadnessMeter], a
 	ld [wSurfingMinigameTrickFlags], a
 ;	xor a
-;	ld [wChannelSoundIDs + Ch8], a
+;	ld [wChannelSoundIDs + CHAN8], a
 	ld a, SFX_SURFING_JUMP
 	call PlaySound
 	ret
@@ -753,7 +753,7 @@ SurfingMinigame_ScoreCurrentWave:
 	ld a, $10
 	call SetCurrentAnimatedObjectCallbackAndResetFrameStateRegisters
 ;	xor a
-;	ld [wChannelSoundIDs + Ch8], a
+;	ld [wChannelSoundIDs + CHAN8], a
 	ld a, SFX_SURFING_CRASH
 	call PlaySound
 	ret
@@ -1012,7 +1012,7 @@ SurfingMinigame_TileInteraction:
 	call SufingMinigame_ReduceSpeedBy64
 .action_3
 ;	xor a
-;	ld [wChannelSoundIDs + Ch8], a
+;	ld [wChannelSoundIDs + CHAN8], a
 	ld a, SFX_SURFING_LAND
 	call PlaySound
 	and a
@@ -1315,7 +1315,7 @@ SurfingMinigame_MoveClouds:
 	ld a, l
 	ld [wc635], a
 	ld d, h
-	ld hl, wOAMBuffer + 5 * 4 + 1
+	ld hl, wShadowOAMSprite05XCoord
 	ld e, $9
 .loop
 	ld a, [hl]
@@ -1432,10 +1432,10 @@ SurfingMinigame_Deduct1HP:
 
 SurfingMinigame_DrawHP:
 	ld de, wSurfingMinigamePikachuHP + 1
-	ld hl, wOAMBuffer + 0 * 4 + 2
+	ld hl, wShadowOAMSprite00TileID
 	ld a, [de]
 	call .PlaceBCDNumber
-	ld hl, wOAMBuffer + 2 * 4 + 2
+	ld hl, wShadowOAMSprite02TileID
 	ld a, [de]
 .PlaceBCDNumber:
 	ld c, a
@@ -1463,7 +1463,7 @@ SurfingMinigame_DrawResultsScreen:
 	ld bc, .BeachTilemapEnd - .BeachTilemap
 	call CopyData
 	call .PlaceTextbox
-	ld hl, wOAMBuffer + 5 * 4 + 1
+	ld hl, wShadowOAMSprite05XCoord
 	ld bc, 9 * 4
 	xor a
 	call FillMemory
@@ -1881,13 +1881,13 @@ SurfingMinigame_ScrollAndGenerateBGMap:
 	ld a, h
 	ldh [hSCX], a
 SurfingMinigame_GenerateBGMap:
-	ld hl, wSurfingMinigameSCX + 1
+	ld hl, wSurfingMinigameSCX2
 	ldh a, [hSCX]
 	cp [hl]
 	ret z
 	ld [hl], a
 	and $f0
-	ld hl, wSurfingMinigameSCX + 2
+	ld hl, wSurfingMinigameSCXHi
 	cp [hl]
 	ret z
 	ld [hl], a
@@ -2742,7 +2742,7 @@ SurfingPikachu_Sine: ; sine
 	ret
 
 .SineWave:
-	sine_wave $100
+	sine_table 32
 
 SurfingPikachuSpawnStateDataPointer:
 	db $00, $00, $00 ; 0
