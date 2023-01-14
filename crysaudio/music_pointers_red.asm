@@ -52,4 +52,4 @@ Music:
 	dba Music_SurfingPikachu
 	dba Music_MeetJessieJames
 	dba Music_YellowUnusedSong
-	dba Music_GBPrinter
+	dba Music_Printer
