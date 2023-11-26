@@ -2004,7 +2004,7 @@ wUnusedD366:: db
 
 wCurMapHeader::
 wCurMapTileset:: db
-wCurMapHeight:: db 
+wCurMapHeight:: db
 wCurMapWidth:: db
 wCurMapDataPtr:: dw
 wCurMapTextPtr:: dw
@@ -2189,7 +2189,7 @@ wNumHoFTeams:: db
 
 wUnusedD5A3:: db
 
-wPlayerCoins:: ds 2 ; BCD
+wPlayerCoins:: dw ; BCD
 
 ; bit array of missable objects. set = removed
 wMissableObjectFlags:: flag_array $100
