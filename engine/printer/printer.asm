@@ -688,7 +688,7 @@ Printer_PrepareSurfingMinigameHighScoreTileMap::
 	add hl, bc
 	call PlaceString
 	call CopySurfingMinigameScore
-	ld b, 8
+	ld b, SET_PAL_GENERIC
 	call RunPaletteCommand
 	ld a, $1
 	ldh [hAutoBGTransferEnabled], a

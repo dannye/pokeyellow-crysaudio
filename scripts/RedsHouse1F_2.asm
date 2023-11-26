@@ -1,17 +1,17 @@
-Func_f1b73::
+RedsHouse1FPrintMomText::
 	ld a, [wd72e]
 	bit 3, a ; received a Pokémon from Oak?
-	jp nz, MomHealPokemon
-	ld hl, MomWakeUpText
+	jp nz, RedsHouse1FMomHealScript
+	ld hl, .WakeUpText
 	call PrintText
 	ret
 
-MomWakeUpText:
-	text_far _MomWakeUpText
+.WakeUpText:
+	text_far _RedsHouse1FMomWakeUpText
 	text_end
 
-MomHealPokemon:
-	ld hl, MomHealText1
+RedsHouse1FMomHealScript:
+	ld hl, RedsHouse1FMomYouShouldRestText
 	call PrintText
 	call GBFadeOutToWhite
 	call ReloadMapData
@@ -30,31 +30,31 @@ MomHealPokemon:
 ;	ld [wNewSoundID], a
 	call PlayMusic
 	call GBFadeInFromWhite
-	ld hl, MomHealText2
+	ld hl, RedsHouse1FMomLookingGreatText
 	call PrintText
 	ret
 
-MomHealText1:
-	text_far _MomHealText1
+RedsHouse1FMomYouShouldRestText:
+	text_far _RedsHouse1FMomYouShouldRestText
 	text_end
-MomHealText2:
-	text_far _MomHealText2
+RedsHouse1FMomLookingGreatText:
+	text_far _RedsHouse1FMomLookingGreatText
 	text_end
 
-Func_f1bc4::
-	ld hl, TVWrongSideText
+RedsHouse1FPrintTVText::
+	ld hl, .WrongSideText
 	ld a, [wSpritePlayerStateData1FacingDirection]
 	cp SPRITE_FACING_UP
 	jp nz, .got_text
-	ld hl, StandByMeText
+	ld hl, .StandByMeMovieText
 .got_text
 	call PrintText
 	ret
 
-StandByMeText:
-	text_far _StandByMeText
+.StandByMeMovieText:
+	text_far _RedsHouse1FTVStandByMeMovieText
 	text_end
 
-TVWrongSideText:
-	text_far _TVWrongSideText
+.WrongSideText:
+	text_far _RedsHouse1FTVWrongSideText
 	text_end
