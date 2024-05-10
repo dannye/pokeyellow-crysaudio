@@ -407,3 +407,5 @@ hPikachuSpriteVRAMOffset:: db
 
 ; 0 if DMG, != 0 if GBC
 hGBC:: db
+
+ENDSECTION
