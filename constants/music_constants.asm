@@ -60,7 +60,7 @@
 	const MUSIC_YELLOW_UNUSED_SONG
 	const MUSIC_GB_PRINTER
 
-	const NUM_SONGS
+DEF NUM_MUSIC_SONGS EQU const_value
 
 	const_def
 
@@ -230,5 +230,6 @@
 	const SFX_SURFING_LAND
 
 	const SFX_POKEFLUTE_IN_BATTLE
+DEF NUM_SFX EQU const_value
 
 DEF SFX_STOP_ALL_MUSIC EQU $ff

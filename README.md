@@ -1,3 +1,9 @@
+# pokeyellow-crysaudio
+
+Pokémon Yellow with the Pokémon Crystal sound engine stitched in. Made by Sanqui and dannye.
+
+Original README follows...
+
 # Pokémon Yellow [![Build Status][ci-badge]][ci]
 
 This is a disassembly of Pokémon Yellow.

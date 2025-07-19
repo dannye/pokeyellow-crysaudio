@@ -1,5 +1,6 @@
 SFX:
 ; entries correspond to SFX_* constants
+	table_width 3
 	dbw 0, 0
 	dba SFX_Get_Item1_1
 
@@ -119,3 +120,4 @@ SFX:
 	dba SFX_Surfing_Land
 
 	dba SFX_PokefluteInBattle
+	assert_table_length NUM_SFX
